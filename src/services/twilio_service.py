@@ -35,7 +35,8 @@ class TwilioService:
                 self.whatsapp_number = settings.twilio_whatsapp_number
                 logger.info("Twilio client initialized successfully")
             else:
-                logger.warning("Twilio credentials not found. Using mock mode.")
+                # No Twilio credentials - using simulation mode
+                self.client = None
         except Exception as e:
             logger.error(f"Failed to initialize Twilio client: {e}")
             self.client = None
