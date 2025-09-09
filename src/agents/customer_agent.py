@@ -49,8 +49,11 @@ class CustomerAgent(BaseAgent):
         thinking_id = chain_of_thought.start_thought(
             self.agent_name,
             ThoughtType.ANALYSIS,
-            f"AI analyzing customer scenario: {state.description}"
+            f"Analyzing customer issue: {state.description}"
         )
+        
+        # Store thinking_id for tool executions
+        self.current_thinking_id = thinking_id
         
         # Use Groq AI to determine best approach
         ai_strategy = await self._ai_determine_strategy(state)
@@ -74,7 +77,9 @@ class CustomerAgent(BaseAgent):
         chain_of_thought.complete_thought(
             thinking_id,
             confidence=ai_strategy.get("confidence", 0.8),
-            reasoning=analysis_content
+            reasoning=analysis_content,
+            tools_used=tools_used,
+            actions_taken=actions_taken
         )
         
         return AgentResponse(
@@ -153,25 +158,30 @@ Respond with specific, actionable strategy based on the actual scenario describe
     
     async def _handle_dispute_with_ai(self, state: DeliveryState, actions_taken: List, tools_used: List):
         """Handle disputes using ALL relevant tools"""
+        from rich.console import Console
+        console = Console()
         
         # Step 1: Initiate mediation
+        console.print(f"   🛠️ Executing initiate_mediation_flow tool...")
         mediation_result = await self.execute_tool("initiate_mediation_flow", {
             "order_id": state.order.order_id
-        })
+        }, self.current_thinking_id)
         actions_taken.append("Initiated AI-powered mediation between parties")
         tools_used.append("initiate_mediation_flow")
         
         # Step 2: Collect evidence from all parties
+        console.print(f"   🛠️ Executing collect_evidence tool...")
         evidence_result = await self.execute_tool("collect_evidence", {
             "order_id": state.order.order_id
-        })
+        }, self.current_thinking_id)
         actions_taken.append("Collected comprehensive evidence from customer and driver")
         tools_used.append("collect_evidence")
         
         # Step 3: AI evidence analysis
+        console.print(f"   🛠️ Executing analyze_evidence tool...")
         analysis_result = await self.execute_tool("analyze_evidence", {
             "evidence_data": evidence_result.get("data", {})
-        })
+        }, self.current_thinking_id)
         actions_taken.append("AI analyzed evidence for fault determination")
         tools_used.append("analyze_evidence")
         
@@ -181,20 +191,22 @@ Respond with specific, actionable strategy based on the actual scenario describe
         # Step 4: Take action based on AI analysis
         if fault_determination == "merchant_fault":
             # Issue refund
+            console.print(f"   🛠️ Executing issue_instant_refund tool...")
             refund_result = await self.execute_tool("issue_instant_refund", {
                 "customer_id": state.stakeholders.customer_id,
                 "order_id": state.order.order_id,
                 "amount": analysis_data.get("compensation_amount_inr", 200),
                 "reason": "AI determined merchant fault - packaging issue"
-            })
+            }, self.current_thinking_id)
             actions_taken.append(f"Processed ₹{analysis_data.get('compensation_amount_inr', 200)} instant refund")
             tools_used.append("issue_instant_refund")
             
             # Exonerate driver (NOW USED!)
+            console.print(f"   🛠️ Executing exonerate_driver tool...")
             exonerate_result = await self.execute_tool("exonerate_driver", {
                 "driver_id": state.stakeholders.driver_id,
                 "order_id": state.order.order_id
-            })
+            }, self.current_thinking_id)
             actions_taken.append("Exonerated driver from fault based on AI analysis")
             tools_used.append("exonerate_driver")
             

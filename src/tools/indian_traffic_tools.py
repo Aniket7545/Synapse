@@ -10,7 +10,7 @@ from langchain.tools import BaseTool
 from pydantic import Field
 
 from config.settings import settings
-from src.utils.chain_of_thought import think, ThoughtType
+from src.utils.chain_of_thought import chain_of_thought, ThoughtType
 
 
 class IndianTrafficAnalysisTool(BaseTool):

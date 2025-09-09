@@ -1,0 +1,79 @@
+{
+  "scenario_id": "LIVE_1757428033",
+  "timestamp": "2025-09-09T19:57:29.300589",
+  "execution_results": [
+    {
+      "agent": "coordinator",
+      "routing_decision": "customer_agent",
+      "confidence": 0.85,
+      "conclusion": "Analyzed scenario and routed to customer_agent"
+    },
+    {
+      "agent": "customer_agent",
+      "tools_used": [
+        "contact_recipient_via_chat",
+        "driver_tracking_tools",
+        "initiate_mediation_flow",
+        "re_route_driver"
+      ],
+      "actions_taken": [
+        "Completed contact_recipient_via_chat operation",
+        "Completed driver_tracking_tools operation",
+        "Completed initiate_mediation_flow operation",
+        "Completed re_route_driver operation"
+      ],
+      "confidence": 0.85,
+      "conclusion": "Customer Agent completed successfully using 4 tools"
+    }
+  ],
+  "chain_of_thought": [
+    {
+      "step_id": "coordinator_0_1757428033",
+      "agent_name": "coordinator",
+      "thought_type": "ThoughtType.ANALYSIS",
+      "description": "Analyzing scenario and routing decision",
+      "start_time": "2025-09-09 19:57:16.505",
+      "end_time": "2025-09-09 19:57:16.505",
+      "confidence": 0.85,
+      "reasoning": "COORDINATOR ANALYSIS:\n\n\nRouting: customer_agent\nConfidence: 0.85\nReasoning: The customer_agent is the best choice to handle this scenario because they are equipped to handle customer satisfaction, dispute resolution, and evidence analysis. They can communicate with the customer, investigate the delivery status, and provide updates on the delivery process. Additionally, they can facilitate refund processing or alternative solutions if necessary. While the merchant_agent may be involved in the investigation, the primary focus of this scenario is on the customer's experience and satisfaction, making the customer_agent the most suitable choice.",
+      "tools_used": [],
+      "metadata": null
+    },
+    {
+      "step_id": "customer_agent_1_1757428033",
+      "agent_name": "customer_agent",
+      "thought_type": "ThoughtType.ANALYSIS",
+      "description": "Analyzing I placed an order for Biryani from Birya...",
+      "start_time": "2025-09-09 19:57:29.299",
+      "end_time": "2025-09-09 19:57:29.299",
+      "confidence": 0.85,
+      "reasoning": "",
+      "tools_used": [
+        "contact_recipient_via_chat",
+        "driver_tracking_tools",
+        "initiate_mediation_flow",
+        "re_route_driver"
+      ],
+      "metadata": null
+    }
+  ],
+  "summary": {
+    "total_steps": 2,
+    "completed_steps": 2,
+    "average_confidence": 0.85,
+    "agents_involved": [
+      "customer_agent",
+      "coordinator"
+    ],
+    "thought_types": [
+      "analysis"
+    ]
+  },
+  "scenario": "I placed an order for Biryani from Biryani by Kilo,Bangalore before 2 hrs but I haven't received it till now",
+  "financial_approval": {
+    "approval_required": false,
+    "approved": true,
+    "approval_type": "automatic",
+    "reason": "No financial impact detected"
+  }
+}

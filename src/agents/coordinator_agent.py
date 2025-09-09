@@ -88,18 +88,28 @@ Recommended Action: Route to specialist for immediate resolution
         """
     
     def _determine_routing(self, state: DeliveryState) -> str:
-        """Smart routing based on keywords and context"""
+        """Enhanced smart routing based on disruption type and context"""
         
         description = state.description.lower()
         
-        # Enhanced keyword-based routing
-        if any(word in description for word in ["damaged", "broken", "spilled", "dispute", "argue"]):
-            return "customer_agent"
-        elif any(word in description for word in ["traffic", "jam", "road", "blocked", "delay"]):
+        # Primary routing based on disruption type
+        if state.disruption_type.value == "traffic_disruption":
             return "traffic_agent"
-        elif any(word in description for word in ["restaurant", "kitchen", "merchant", "prep"]):
+        elif state.disruption_type.value == "merchant_delay":
+            return "merchant_agent"
+        elif state.disruption_type.value == "delivery_failed":
+            return "customer_agent"
+        elif state.disruption_type.value == "weather_disruption":
+            return "traffic_agent"  # Traffic agent handles weather-related routing
+        
+        # Fallback keyword-based routing for complex scenarios  
+        if any(word in description for word in ["damaged", "broken", "spilled", "dispute", "argue", "refund", "complaint"]):
+            return "customer_agent"
+        elif any(word in description for word in ["traffic", "jam", "road", "blocked", "route", "weather", "rain", "flood"]):
+            return "traffic_agent"
             return "merchant_agent"
         else:
+            # Default to customer agent for unknown scenarios
             return "customer_agent"
     
     def _assess_scenario(self, state: DeliveryState) -> str:

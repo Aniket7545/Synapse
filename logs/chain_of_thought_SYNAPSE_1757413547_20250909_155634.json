@@ -1,0 +1,74 @@
+{
+  "scenario_id": "SYNAPSE_1757413547",
+  "timestamp": "2025-09-09T15:56:34.833349",
+  "execution_results": [
+    {
+      "agent": "coordinator",
+      "routing_decision": "merchant_agent",
+      "confidence": 0.85,
+      "conclusion": "Analyzed merchant_delay scenario and routed to merchant_agent"
+    },
+    {
+      "agent": "merchant_agent",
+      "tools_used": [
+        "get_merchant_status"
+      ],
+      "actions_taken": [
+        "Assessed merchant capacity and preparation time"
+      ],
+      "confidence": 0.88,
+      "conclusion": "Crisis resolution completed using 1 specialized tools"
+    }
+  ],
+  "chain_of_thought": [
+    {
+      "step_id": "coordinator_agent_0_1757413547",
+      "agent_name": "coordinator_agent",
+      "thought_type": "ThoughtType.ANALYSIS",
+      "description": "Analyzing merchant_delay scenario: Due to bad weather the delivery guy can't deliver the package ",
+      "start_time": "2025-09-09 15:55:47.931004",
+      "end_time": "2025-09-09 15:55:47.931004",
+      "confidence": 0.85,
+      "reasoning": "Analyzed scenario and routed to merchant_agent",
+      "tools_used": [],
+      "metadata": {
+        "actions_taken": []
+      }
+    },
+    {
+      "step_id": "merchant_agent_1_1757413547",
+      "agent_name": "merchant_agent",
+      "thought_type": "ThoughtType.ANALYSIS",
+      "description": "Analyzing merchant delay: Due to bad weather the delivery guy can't deliver the package ",
+      "start_time": "2025-09-09 15:55:47.936911",
+      "end_time": "2025-09-09 15:55:48.225749",
+      "confidence": 0.9,
+      "reasoning": "Analyzed merchant situation and executed 1 tools for resolution",
+      "tools_used": [
+        "get_merchant_status"
+      ],
+      "metadata": {
+        "tool_results": {
+          "get_merchant_status": "completed"
+        },
+        "actions_taken": [
+          "Assessed merchant capacity and preparation time"
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "total_steps": 2,
+    "completed_steps": 2,
+    "average_confidence": 0.875,
+    "agents_involved": [
+      "coordinator_agent",
+      "merchant_agent"
+    ],
+    "thought_types": [
+      "analysis"
+    ],
+    "financial_authorized": false,
+    "api_executions_count": 0
+  }
+}

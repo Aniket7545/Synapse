@@ -20,6 +20,7 @@ class ThoughtType(Enum):
     COORDINATION = "coordination"
     DECISION = "decision"
     REASONING = "reasoning"
+    ACTION = "action"  # Added missing ACTION attribute
 
 @dataclass
 class ThoughtStep:
@@ -61,13 +62,33 @@ class ChainOfThought:
         
         return step_id
     
-    def complete_thought(self, step_id: str, confidence: float, reasoning: str):
-        """Complete a thinking step"""
+    def add_tool_to_thought(self, step_id: str, tool_name: str, tool_result: str = ""):
+        """Add tool usage to a specific thought step"""
+        for thought in self.thoughts:
+            if thought.step_id == step_id:
+                if not thought.tools_used:
+                    thought.tools_used = []
+                thought.tools_used.append(tool_name)
+                
+                if not thought.metadata:
+                    thought.metadata = {}
+                if "tool_results" not in thought.metadata:
+                    thought.metadata["tool_results"] = {}
+                thought.metadata["tool_results"][tool_name] = tool_result
+                break
+    
+    def complete_thought(self, step_id: str, confidence: float, reasoning: str, tools_used: List[str] = None, actions_taken: List[str] = None):
+        """Complete a thinking step with enhanced details"""
         for thought in self.thoughts:
             if thought.step_id == step_id:
                 thought.end_time = datetime.now()
                 thought.confidence = confidence
                 thought.reasoning = reasoning
+                if tools_used:
+                    thought.tools_used = (thought.tools_used or []) + tools_used
+                if not thought.metadata:
+                    thought.metadata = {}
+                thought.metadata["actions_taken"] = actions_taken or []
                 
                 # Display completion
                 self._display_thinking_complete(thought)
@@ -75,12 +96,18 @@ class ChainOfThought:
     
     def _display_thinking_start(self, thought: ThoughtStep):
         """Display thinking step start"""
-        console.print(f"🧠 [{thought.thought_type.value.upper()}] {thought.agent_name}: {thought.description}")
+        if thought.thought_type == ThoughtType.ACTION:
+            console.print(f"🔧 [TOOL] {thought.agent_name}: {thought.description}")
+        else:
+            console.print(f"🧠 [{thought.thought_type.value.upper()}] {thought.agent_name}: {thought.description}")
     
     def _display_thinking_complete(self, thought: ThoughtStep):
         """Display thinking step completion"""
         duration = (thought.end_time - thought.start_time).total_seconds() if thought.end_time else 0
-        console.print(f"   ✅ Confidence: {thought.confidence:.2f} | Duration: {duration:.1f}s")
+        if thought.thought_type == ThoughtType.ACTION:
+            console.print(f"   ✅ Tool completed | Confidence: {thought.confidence:.2f} | Duration: {duration:.1f}s")
+        else:
+            console.print(f"   ✅ Confidence: {thought.confidence:.2f} | Duration: {duration:.1f}s")
     
     def display_full_chain(self):
         """Display complete chain of thought"""

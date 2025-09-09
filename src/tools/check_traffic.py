@@ -13,38 +13,42 @@ class CheckTrafficTool(BaseTool):
         self.description = "Get real-time traffic conditions and congestion data"
     
     async def _run(self, origin: str, destination: str, city: str) -> Dict[str, Any]:
-        # Simulate API call delay
-        await asyncio.sleep(0.5)
-        
-        # Realistic traffic simulation based on time and city
-        current_hour = datetime.now().hour
-        
-        city_traffic_patterns = {
-            "mumbai": {"peak_hours": [(8, 11), (18, 21)], "base_delay": 15, "multiplier": 2.5},
-            "delhi": {"peak_hours": [(9, 12), (17, 20)], "base_delay": 12, "multiplier": 2.0},
-            "bangalore": {"peak_hours": [(8, 10), (18, 20)], "base_delay": 18, "multiplier": 2.2}
-        }
-        
-        pattern = city_traffic_patterns.get(city.lower(), city_traffic_patterns["delhi"])
-        is_peak = any(start <= current_hour <= end for start, end in pattern["peak_hours"])
-        
-        if is_peak:
-            traffic_level = "heavy"
-            delay = int(pattern["base_delay"] * pattern["multiplier"])
-        else:
-            traffic_level = "moderate"
-            delay = pattern["base_delay"]
-        
+        import os
+        from src.tools.google_maps import GoogleMapsClient
+        api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+        client = GoogleMapsClient(api_key)
+
+        # Call Google Maps API for route and traffic delay
+        route_data = client.get_route(origin, destination)
+        delay = client.get_traffic_delay(origin, destination)
+
+        traffic_level = "unknown"
+        if delay is not None:
+            if delay > 20:
+                traffic_level = "heavy"
+            elif delay > 5:
+                traffic_level = "moderate"
+            else:
+                traffic_level = "light"
+
+        # Parse alternative routes if available
+        alternative_routes = []
+        if route_data and "routes" in route_data:
+            for idx, route in enumerate(route_data["routes"]):
+                leg = route["legs"][0]
+                alt = {
+                    "route_name": f"Route {idx+1}",
+                    "time_minutes": leg.get("duration", {}).get("value", 0) // 60,
+                    "distance_km": leg.get("distance", {}).get("value", 0) / 1000
+                }
+                alternative_routes.append(alt)
+
         return {
             "origin": origin,
             "destination": destination,
             "city": city,
             "traffic_level": traffic_level,
-            "estimated_delay_minutes": delay,
-            "alternative_routes": [
-                {"route_name": "Main Road", "time_minutes": delay + 10, "distance_km": 12.5},
-                {"route_name": "Ring Road", "time_minutes": delay + 25, "distance_km": 15.2},
-                {"route_name": "Highway", "time_minutes": delay + 5, "distance_km": 18.0}
-            ],
+            "estimated_delay_minutes": delay if delay is not None else -1,
+            "alternative_routes": alternative_routes,
             "timestamp": datetime.now().isoformat()
         }

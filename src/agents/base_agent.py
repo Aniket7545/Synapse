@@ -33,12 +33,35 @@ class BaseAgent(ABC):
         """Return list of tool names this agent requires"""
         pass
     
-    async def execute_tool(self, tool_name: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
-        """Execute a tool by name"""
+    async def execute_tool(self, tool_name: str, parameters: Dict[str, Any], current_thinking_id: str = None) -> Dict[str, Any]:
+        """Execute a tool by name with chain of thought tracking"""
+        from src.utils.chain_of_thought import chain_of_thought, ThoughtType
+        
         tool = self._find_tool(tool_name)
         if not tool:
             raise ValueError(f"Tool {tool_name} not found")
-        return await tool.execute(parameters)
+        
+        try:
+            result = await tool.execute(parameters)
+            
+            # Add tool to current thought if thinking_id provided
+            if current_thinking_id:
+                chain_of_thought.add_tool_to_thought(
+                    current_thinking_id, 
+                    tool_name, 
+                    result.get('status', 'completed')
+                )
+            
+            return result
+        except Exception as e:
+            # Add failed tool to current thought if thinking_id provided
+            if current_thinking_id:
+                chain_of_thought.add_tool_to_thought(
+                    current_thinking_id, 
+                    tool_name, 
+                    f"failed: {str(e)}"
+                )
+            raise
     
     def _find_tool(self, tool_name: str) -> Optional[BaseTool]:
         """Find tool by name"""

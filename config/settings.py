@@ -30,6 +30,12 @@ class Settings(BaseSettings):
     mappls_api_key: Optional[str] = Field(default=None, env="MAPPLS_API_KEY")
     tomtom_api_key: Optional[str] = Field(default=None, env="TOMTOM_API_KEY")
     
+    # Twilio Configuration
+    twilio_account_sid: Optional[str] = Field(default=None, env="TWILIO_ACCOUNT_SID")
+    twilio_auth_token: Optional[SecretStr] = Field(default=None, env="TWILIO_AUTH_TOKEN")
+    twilio_phone_number: Optional[str] = Field(default=None, env="TWILIO_PHONE_NUMBER")
+    twilio_whatsapp_number: Optional[str] = Field(default=None, env="TWILIO_WHATSAPP_NUMBER")
+    
     class Config:
         extra = "allow"  # This allows extra fields from .env
         env_file = ".env"

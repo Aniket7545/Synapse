@@ -376,21 +376,25 @@ class SynapseWorkflow:
         console.print(outcome_panel)
     
     def _save_chain_of_thought(self, scenario_id: str) -> str:
-        """Save chain of thought to logs folder"""
+        """Save chain of thought to logs folder using Pydantic model"""
+        from src.models.chain_of_thought_log import ChainOfThoughtLog, ChainOfThoughtStep
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"logs/chain_of_thought_{scenario_id}_{timestamp}.json"
-        
-        chain_data = {
-            "scenario_id": scenario_id,
-            "timestamp": datetime.now().isoformat(),
-            "execution_results": self.execution_results,
-            "chain_of_thought": chain_of_thought.get_full_chain(),
-            "summary": chain_of_thought.get_chain_summary()
-        }
-        
+
+        # Build steps from chain_of_thought utility (assumed to provide list of dicts)
+        steps_raw = chain_of_thought.get_full_chain()
+        steps = [ChainOfThoughtStep(**step) for step in steps_raw]
+
+        log = ChainOfThoughtLog(
+            scenario_id=scenario_id,
+            steps=steps,
+            summary=chain_of_thought.get_chain_summary(),
+            metrics={"execution_results": self.execution_results}
+        )
+
         with open(filename, 'w') as f:
-            json.dump(chain_data, f, indent=2, default=str)
-        
+            f.write(log.json(indent=2, default=str))
+
         return filename
 
 

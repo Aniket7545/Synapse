@@ -15,7 +15,7 @@ from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
 
 from src.models.delivery_state import DeliveryState, DisruptionType, IndianCity
-from src.utils.chain_of_thought import chain_of_thought
+from src.utils.chain_of_thought import chain_of_thought, ThoughtType
 from config.settings import settings
 
 console = Console()
