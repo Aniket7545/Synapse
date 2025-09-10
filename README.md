@@ -210,7 +210,7 @@ Every crisis generates **comprehensive audit trails** with:
 |---------|---------------|
 | **Language** | Python 3.11+ |
 | **Architecture** | Modular Multi-Agent System |
-| **AI Engine** | LLM-powered (OpenAI/Anthropic) |
+| **AI Engine** | LLM-powered (Groq/Gemini) |
 | **Concurrency** | Async/Await Pattern |
 | **Database** | JSON-based audit logging |
 | **UI Framework** | Rich Console Library |
