@@ -40,6 +40,10 @@ Project Synapse represents a paradigm shift from traditional rule-based systems 
 
 ## 🏗️ **System Architecture**
 
+![Project Synapse Architecture](Screenshot%202025-09-09%20233044.png)
+
+*Real-time AI-powered crisis management system with intelligent agent coordination*
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        🚀 PROJECT SYNAPSE                       │
@@ -243,33 +247,7 @@ git push origin feature/amazing-enhancement
 
 ---
 
-## 🏆 **Awards & Recognition**
 
-- 🥇 **GrabHack 2025**: Best AI Innovation Award
-- 🚀 **TechCrunch Disrupt**: Startup Battlefield Finalist  
-- 🎯 **MIT Innovation**: Featured in AI Research Showcase
-- 📈 **Forbes 30 Under 30**: Recognized for AI Excellence
-
----
-
-## 📞 **Support & Contact**
-
-### 💬 **Community**
-- **Discord**: [Join our community](https://discord.gg/synapse-ai)
-- **Slack**: [Developer discussions](https://synapse-dev.slack.com)
-- **Reddit**: [r/ProjectSynapse](https://reddit.com/r/ProjectSynapse)
-
-### 📧 **Professional Support**
-- **Enterprise**: enterprise@projectsynapse.ai
-- **Technical**: support@projectsynapse.ai  
-- **Partnerships**: partnerships@projectsynapse.ai
-
-### 🔗 **Links**
-- **Documentation**: [docs.projectsynapse.ai](https://docs.projectsynapse.ai)
-- **API Reference**: [api.projectsynapse.ai](https://api.projectsynapse.ai)
-- **Live Demo**: [demo.projectsynapse.ai](https://demo.projectsynapse.ai)
-
----
 
 ## 📄 **License**
 
@@ -294,17 +272,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ```
-
----
-
-## 🙏 **Acknowledgments**
-
-Special thanks to:
-- **Grab Holdings**: For inspiring the crisis management vision
-- **OpenAI/Anthropic**: For providing the AI foundation
-- **Rich Library**: For beautiful console interfaces  
-- **Python Community**: For the incredible ecosystem
-- **Our Beta Users**: For invaluable feedback and testing
 
 ---
 
